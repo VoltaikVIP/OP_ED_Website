@@ -1,0 +1,146 @@
+body{
+    background-color: rgb(31, 36, 36);
+}
+p{
+    color: rgb(255, 255, 255);
+    font-family: helvetica, arial;
+    font-size: 24px;
+    font-weight: normal;
+}
+.main_block{
+    width: 1000px;
+    margin: auto;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+.song {
+    width: 100%;
+    height: 250px;
+    background-color: rgb(55, 63, 64);
+    border-radius: 10px;
+    margin: auto;
+    margin-top: 50px;
+    overflow: hidden;
+
+    display: flex;
+    align-items: center;
+}
+.past_song {
+    width: 100%;
+    height: 150px;
+    background-color: rgb(55, 63, 64);
+    border-radius: 10px;
+    margin: auto;
+    margin-top: 30px;
+    overflow: hidden;
+
+    display: flex;
+    align-items: center;
+}
+.section_header{
+    color: rgb(255, 255, 255);
+    font-family: helvetica, arial;
+    font-size: 64px;
+    font-weight: normal;
+    margin: auto;
+    margin-bottom: 0px;
+    margin-top: 50px;
+}
+.vote{
+    width: 60%;
+    margin: auto;
+    margin-top: 25px;
+
+    display: flex;
+    justify-content: space-evenly;
+}
+.vote_option{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    font-family: helvetica, arial;
+    font-size: 24px;
+    font-weight: bold;
+
+    background-color: rgb(55, 63, 64);
+    color: white;
+    width: 40px;
+    height: 40px;
+    border-radius: 10px;
+    cursor: pointer;
+    text-align: center;
+}
+.vote_option input{
+    display: none;
+}
+.vote_option:hover{
+    background-color: rgb(94, 109, 111);
+}
+.vote_option:has(input:checked){
+    background-color: rgb(241, 241, 241);
+    color: black;
+}
+.vote_submit{
+    margin: auto;
+    margin-top: 25px;
+
+    font-family: helvetica, arial;
+    font-size: 20px;
+    font-weight: bold;
+
+    display: flex;
+    justify-content: space-evenly;
+
+    background-color: rgb(55, 63, 64);
+    color: white;
+    border: none;
+    width: 100px;
+    height: 40px;
+    border-radius: 10px;
+    text-align: center;
+    align-items: center;
+    cursor: pointer;
+}
+.vote_submit:hover{
+    background-color: rgb(94, 109, 111);
+}
+.highlight{
+    color: rgb(61, 228, 196);
+}
+.dulled{
+    color:rgb(219, 222, 224);
+}
+.past_highlight{
+    color: rgb(61, 228, 196);
+    font-size: 20px;
+}
+.past_dulled{
+    color:rgb(219, 222, 224);
+    font-size: 20px;
+}
+.song_cover {
+    height: 80%;
+    border-radius: 5px;
+    margin: 15px;
+}
+.past_song_name{
+    color: rgb(255, 255, 255);
+    font-size: 36px;
+    margin: 0px;
+    height: 25px;
+}
+#song_text {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+#song_name{
+    color: rgb(255, 255, 255);
+    font-size: 48px;
+    margin: 0px;
+}
+#vote_unavailable_text{
+    font-size: 36px;
+}

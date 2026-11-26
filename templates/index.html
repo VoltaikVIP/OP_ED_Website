@@ -1,0 +1,146 @@
+{% extends "base.html" %}
+{% block title %}OP/ED Tier List Vote{% endblock %}
+
+{% block content %}
+<div class="main_block">
+    <h1 class="section_header">Current Song</h1>
+
+    {% if song %}
+        <div class="song" id="current_song">
+            <img class="song_cover" id="main_song_cover" src="{{ song.cover }}" alt="{{ song.name }}">
+            <div id="song_text">
+                <p id="song_name">{{ song.name }}</p>
+                <p>
+                    <span class="highlight" id="song_type">{{ song.type }}</span> 
+                    <span class="dulled">from</span> 
+                    <span class="highlight" id="song_anime">{{ song.anime }}</span> 
+                </p>
+            </div>
+        </div>
+    {% endif %}
+
+    <form method="POST" id="vote_block">
+        <div class="vote">
+            {% for i in range(1, 11) %}
+
+                <label class="vote_option">
+                    <input type="radio" name="vote_result" value="{{ i }}">
+                    {{ i }}
+                </label>
+
+            {% endfor %}
+        </div>
+
+        <button type="submit" class="vote_submit">Submit</button>
+    </form>
+    
+    <h1 class="section_header" id="vote_unavailable_text">Vote Submitted!</h1>
+
+    <h1 class="section_header">Recent Songs</h1>
+
+    {% for i in range(3) %}
+    <div class="past_song" id="recent_song">
+        <img class="song_cover" id="recent_song_cover{{ i }}" src="static/ranks/NA.png" alt="NA">
+        <img class="song_cover" id="recent_song_score{{ i }}" src="static/ranks/NA.png" alt="NA">
+        <div id="song_text">
+            <p class="past_song_name" id="recent_song_name{{ i }}">{{ song.name }}</p>
+            <p>
+                <span class="past_highlight" id="recent_song_type{{ i }}">{{ song.type }}</span> 
+                <span class="past_dulled">from</span> 
+                <span class="past_highlight" id="recent_song_anime{{ i }}">{{ song.anime }}</span> 
+            </p>
+        </div>
+    </div>
+    {% endfor %}
+
+    <h1 class="section_header">Top Songs</h1>
+
+    {% for i in range(3) %}
+    <div class="past_song" id="top_song">
+        <img class="song_cover" id="top_song_cover{{ i }}" src="static/ranks/NA.png" alt="NA">
+        <img class="song_cover" id="top_song_score{{ i }}" src="static/ranks/NA.png" alt="NA">
+        <div id="song_text">
+            <p class="past_song_name" id="top_song_name{{ i }}">{{ song.name }}</p>
+            <p>
+                <span class="past_highlight" id="top_song_type{{ i }}">{{ song.type }}</span> 
+                <span class="past_dulled">from</span> 
+                <span class="past_highlight" id="top_song_anime{{ i }}">{{ song.anime }}</span> 
+            </p>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+
+<script>
+    let previous_voted = false;
+    let previous_available = false;
+    let previous_song = false;
+
+    async function checkAvailable() {
+
+        const response = await fetch("/check_timer");
+        const data = await response.json();
+
+        if (previous_voted != data.voted | previous_available != data.available | previous_song != data.current.song_name) {
+            previous_voted = data.voted;
+            previous_available = data.available;
+            previous_song = data.current.song_name;
+
+            updateElements(data);
+        }
+    }
+
+    function updateElements(data) {
+        if (data) {
+            if (!data.finished) {
+                document.getElementById("vote_block").style.display = (data.available && !data.voted) ? "block" : "none";
+                document.getElementById("vote_unavailable_text").style.display = (data.available && !data.voted) ? "none" : "block";
+                if (!data.available) {
+                    document.getElementById("vote_unavailable_text").textContent = "Voting Available Soon";
+                } else {
+                    document.getElementById("vote_unavailable_text").textContent = "Thanks For Voting!";
+                }
+
+                document.getElementById("main_song_cover").src = data.current.song_cover;
+                document.getElementById("song_name").textContent = data.current.song_name;
+                document.getElementById("song_type").textContent = data.current.song_type;
+                document.getElementById("song_anime").textContent = data.current.song_anime;
+
+                if (data.top) {
+                    for (i=0; i < 3; i++) {
+                        document.getElementById("top_song_cover" + i).src = data.top[i].song_cover;
+                        document.getElementById("top_song_score" + i).src = data.top[i].song_score;
+                        document.getElementById("top_song_name" + i).textContent = data.top[i].song_name;
+                        document.getElementById("top_song_type" + i).textContent = data.top[i].song_type;
+                        document.getElementById("top_song_anime" + i).textContent = data.top[i].song_anime;
+                    }
+                }
+
+                if (data.recent) {
+                    for (i=0; i < 3; i++) {
+                        document.getElementById("recent_song_cover" + i).src = data.recent[i].song_cover;
+                        document.getElementById("recent_song_score" + i).src = data.recent[i].song_score;
+                        document.getElementById("recent_song_name" + i).textContent = data.recent[i].song_name;
+                        document.getElementById("recent_song_type" + i).textContent = data.recent[i].song_type;
+                        document.getElementById("recent_song_anime" + i).textContent = data.recent[i].song_anime;
+                    }
+                }
+
+            } else {
+                document.getElementById("current_song").style.display = "none";
+                document.getElementById("vote_unavailable_text").style.display = "block";
+                document.getElementById("vote_unavailable_text").textContent = "That's the event over, thanks for coming!!!";
+            }
+        } else {
+            document.getElementById("vote_block").style.display = "none";
+            document.getElementById("vote_unavailable_text").style.display = "block";
+            document.getElementById("vote_unavailable_text").textContent = "Voting Available Soon";
+        }
+    }
+
+    setInterval(checkAvailable, 1000);
+
+    updateElements();
+    checkAvailable();
+</script>
+{% endblock %}
