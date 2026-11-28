@@ -88,9 +88,10 @@ def register_routes(app, db):
     @app.route('/host', methods=['GET', 'POST'])
     def host():
         if request.method == "POST":
-            CurrentSong.query.with_for_update().first().song_id = 1
-            Results.query.delete()
-            db.session.commit()
+            if request.form.get("password") == "anthony":
+                CurrentSong.query.with_for_update().first().song_id = 1
+                Results.query.delete()
+                db.session.commit()
         return render_template('host.html')
 
     @app.route('/obs_data')
@@ -125,3 +126,11 @@ def register_routes(app, db):
         rank = f"static/ranks/{score}.png"
 
         return {"playing": playing, "video": video, "cover": cover, "rank": rank, "song_name": song_name, "anime": anime, "type": type}
+
+    @app.route('/results_data')
+    def get_results():
+        results = Results.query.all()
+        data = {}
+        for row in results:
+            data[row.song_id] = row.vote_average
+        return data
