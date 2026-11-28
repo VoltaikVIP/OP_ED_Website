@@ -36,7 +36,7 @@ def register_routes(app, db):
 
         start_time = CurrentSong.query.first().start_time
         time_remaining = song.length - time.time() + start_time
-        available =  0 < time_remaining <= 10
+        available =  0 < time_remaining <= 30
 
         if not available:
             session["user_voted"] = False
